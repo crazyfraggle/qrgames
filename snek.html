@@ -1,24 +1,33 @@
-<canvas></canvas><div></div><div></div><div></div><div></div><script>
+<canvas></canvas><div></div><div></div><div></div><div></div><pre></pre><script>
     // Single line comments are cleaned on build.
     W=window;D=document;
     // View width and height
+    fud=()=>({x:(Math.random()*ww)|0,y:(Math.random()*wh)|0,s:(Math.random()*5+1)|0});
     ww=100;wh=100;
     c=D.getElementsByTagName("canvas")[0];
     c.width=D.body.clientWidth;
     c.height=D.body.clientHeight;
     ctx=c.getContext("2d");
     ctx.setTransform(c.width/ww,0,0,c.height/wh,0,0);
+    p=D.getElementsByTagName("pre")[0];
     // Movement direction
     d={x:0,y:0};
     // Snake body
     b=[];
     // Snake length
     l=5;
+    high=0;
     // Snake head
-    h={x:0,y:0};
+    h={x:50,y:50};
     // Food
-    f={x:0,y:0};
+    f=fud();
     // Game loop
+    score=()=>{
+        // Update highscore
+        high=l-5>high?l-5:high;
+        // Update score
+        p.innerHTML=`Score:${l-5}\nHigh:${high||0}`
+    };
     setInterval(function(){
         // Move snake
         h.x+=d.x;
@@ -36,7 +45,7 @@
         });
         // Draw food
         ctx.fillStyle="#f00";
-        ctx.fillRect(f.x,f.y,1,1);
+        ctx.fillRect(f.x,f.y,f.s,f.s);
         // Add snake head
         b.push({x:h.x,y:h.y});
         // Remove snake tail
@@ -44,16 +53,17 @@
             b.shift();
         }
         // Snake ate food
-        if(f.x==h.x&&f.y==h.y){
-            l++;
-            f.x=(Math.random()*ww)|0;
-            f.y=(Math.random()*wh)|0;
+        if(h.x>=f.x&&h.x<f.x+f.s&&h.y>=f.y&&h.y<f.y+f.s){
+            l+=f.s*f.s;
+            f=fud();
+            score();
         }
         // Snake ate itself
         b.forEach(function(p,i){
             if(i!=b.length-1&&p.x==h.x&&p.y==h.y){
                 l=5;
             }
+            score();
         });
 
     },1000/15);
@@ -94,6 +104,14 @@ div{
     width: 20vw;
     height:20vh;
     position:fixed;
+}
+pre{
+    position:fixed;
+    top:0;
+    left:0;
+    color:#fff7;
+    font-size:5vw;
+    line-height: 1;
 }
 .up{
     top:0;
