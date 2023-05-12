@@ -1,0 +1,13 @@
+{
+  "name": "qrgames",
+  "version": "1.0.0",
+  "description": "JS Games that fit in a QR code",
+  "scripts": {
+    "snek": "cat snek.html | grep -v // | paste -sd' ' - |  sed s', ,,g' | gzip -9 | base64 | xargs -0 printf \"https://itty.bitty.app/Snek/#/%s\n\" | tee url.txt | qrcode -o snek.png"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "qrcode": "^1.5.3"
+  }
+}

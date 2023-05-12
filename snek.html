@@ -1,0 +1,114 @@
+<canvas></canvas><div></div><div></div><div></div><div></div><script>
+    // Single line comments are cleaned on build.
+    W=window;D=document;
+    // View width and height
+    ww=100;wh=100;
+    c=D.getElementsByTagName("canvas")[0];
+    c.width=D.body.clientWidth;
+    c.height=D.body.clientHeight;
+    ctx=c.getContext("2d");
+    ctx.setTransform(c.width/ww,0,0,c.height/wh,0,0);
+    // Movement direction
+    d={x:0,y:0};
+    // Snake body
+    b=[];
+    // Snake length
+    l=5;
+    // Snake head
+    h={x:0,y:0};
+    // Food
+    f={x:0,y:0};
+    // Game loop
+    setInterval(function(){
+        // Move snake
+        h.x+=d.x;
+        h.y+=d.y;
+        // Wrap snake around screen
+        h.x=(h.x+ww)%ww;
+        h.y=(h.y+wh)%wh;
+        // Clear canvas
+        ctx.fillStyle="#000";
+        ctx.fillRect(0,0,ww,wh);
+        // Draw snake
+        ctx.fillStyle="#fff";
+        b.forEach(function(p){
+            ctx.fillRect(p.x,p.y,1,1);
+        });
+        // Draw food
+        ctx.fillStyle="#f00";
+        ctx.fillRect(f.x,f.y,1,1);
+        // Add snake head
+        b.push({x:h.x,y:h.y});
+        // Remove snake tail
+        while(b.length>l){
+            b.shift();
+        }
+        // Snake ate food
+        if(f.x==h.x&&f.y==h.y){
+            l++;
+            f.x=(Math.random()*ww)|0;
+            f.y=(Math.random()*wh)|0;
+        }
+        // Snake ate itself
+        b.forEach(function(p,i){
+            if(i!=b.length-1&&p.x==h.x&&p.y==h.y){
+                l=5;
+            }
+        });
+
+    },1000/15);
+    // Keyboard input
+    // Go right
+    gr=()=>{d=d.x!=-1?{x:1,y:0}:d};
+    // Go left
+    gl=()=>{d=d.x!=1?{x:-1,y:0}:d};
+    // Go up
+    gu=()=>{d=d.y!=-1?{x:0,y:-1}:d};
+    // Go down
+    gd=()=>{d=d.y!=1?{x:0,y:1}:d};
+    W.onkeydown=(e)=>{
+        // Arrow keys
+        ({37:gl,38:gu,39:gr,40:gd})[e.keyCode]?.();
+    };
+    divs=D.getElementsByTagName("div");
+    divs[0].ontouchstart = gu;
+    divs[0].classList.add("up");
+    divs[1].ontouchstart = gl;
+    divs[1].classList.add("left");
+    divs[2].ontouchstart = gr;
+    divs[2].classList.add("right");
+    divs[3].ontouchstart = gd;
+    divs[3].classList.add("down");
+</script><style>
+* {
+    margin:0;
+}
+body {
+    width: 100vmin;
+    height: 100vmin;
+    margin:0;
+    padding:0;
+}
+div{
+    background:#0cc3;
+    width: 20vw;
+    height:20vh;
+    position:fixed;
+}
+.up{
+    top:0;
+    left:40vw;
+}
+.down{
+    bottom:0;
+    left:40vw;
+}
+.left{
+    top:40vh;
+    left:0;
+}
+.right{
+    top:40vh;
+    right:0;
+}
+</style>
