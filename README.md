@@ -21,3 +21,6 @@ Instructions for future me to remember how to set up builds.
 2. `npm run snek`
 
    Convert the snek.html to QRCode.
+
+Note: The (pretty simplistic) minimizer script removes spaces from the final output.
+This unfortunatly means no classes or ids on elements. Adding a real minimizer might be a good idea for the future.
